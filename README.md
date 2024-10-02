@@ -75,6 +75,60 @@ Configurando uma estrura AWS, com docker para utilizar o wordpress.
        - Permitir tráfego **NFS** (porta 2049) para o **EFS**.
        
 ### 4.2. Script de User Data para Instâncias EC2
-No campo de "User Data" da criação da instância EC2, adicione o seguinte script para instalar o Docker, rodar o WordPress e conectar ao EFS:
+No campo de "User Data" da criação da instância EC2, adicione o seguinte script para instalar o Docker, rodar o WordPress e conectar ao EFS e ao RDS:
 
-```bash
+## 5. Configuração do Load Balancer
+
+###5.1. Configurar o Security Group para o Load Balancer
+Crie um Security Group chamado lb-sg.
+Defina as regras de entrada (Inbound):
+Permitir tráfego HTTP (porta 80) de qualquer lugar (0.0.0.0/0).
+Permitir tráfego HTTPS (porta 443) de qualquer lugar (0.0.0.0/0).
+
+
+### 5.2. Criar o Load Balancer
+1. No console do **EC2**, vá para **Load Balancers** e clique em "Criar Load Balancer".
+2. Escolha o tipo **Application Load Balancer (ALB)**.
+3. Defina as seguintes configurações:
+   - **Nome:** `projeto-2-compass-lb`.
+   - **Esquema:** Internet-facing (caso deseje que o Load Balancer seja acessível da internet).
+   - **VPC:** Selecione a VPC `projeto-2-compass-vpc`.
+   - **Subnets:** Selecione as duas **subnets públicas** criadas anteriormente.
+   - **Security Group:** Selecione o **lb-sg** (criado anteriormente).
+
+### 5.3. Configurar Regras de Listener
+1. Defina um **listener** para a porta **80 (HTTP)**:
+   - **Regra de encaminhamento:** Direcione o tráfego para o **Target Group** com as instâncias EC2.
+
+### 5.4. Criar Target Group
+1. Acesse **Target Groups** no console de Load Balancer.
+2. Clique em "Criar Target Group" e configure:
+   - **Nome:** `projeto-2-compass-tg`.
+   - **Tipo de destino:** Instâncias.
+   - **Protocolo:** HTTP.
+   - **Porta:** 80.
+   - **VPC:** `projeto-2-compass-vpc`.
+   - **Health Check:** Use o caminho `/` ou `/index.php` para verificar a saúde das instâncias. 
+3. Após criar o Target Group, adicione as **instâncias EC2** privadas associadas à sua aplicação.
+
+### 5.5. Associar o Target Group ao Load Balancer
+1. Volte ao **Load Balancer** e edite o **listener**.
+2. Associe o **Target Group** `projeto-2-compass-tg` criado anteriormente ao listener da porta 80.
+
+---
+
+## 6. Verificação e Testes
+
+### 6.1. Verificar o Load Balancer
+1. Após o Load Balancer estar configurado, vá para o console do **EC2** e copie o **DNS público** do Load Balancer.
+2. Cole o **DNS** no navegador.
+   - O Load Balancer deve distribuir o tráfego entre as instâncias EC2 nas subnets públicas.
+   - A página de instalação do **WordPress** deverá ser carregada.
+
+### 6.2. Testar a Resiliência
+1. Para testar a resiliência do Load Balancer:
+   - Acesse o console da **EC2**.
+   - Pare uma das instâncias EC2.
+2. Verifique se o Load Balancer continua redirecionando o tráfego para a outra instância EC2.
+
+---

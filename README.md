@@ -118,36 +118,26 @@ Na seção de rede:
   - **Security Group**: `ec2-sg`
 
 No campo de "User Data" da criação da instância EC2, adicione o seguinte script para instalar o Docker, rodar o WordPress e conectar ao EFS e ao RDS:
-bash```
+```bash
 #!/bin/bash
-# Atualizar pacotes e instalar dependências necessárias
 sudo yum update -y
 sudo yum install -y nfs-utils amazon-efs-utils
 
-# Criar o diretório para montar o EFS
 sudo mkdir -p /mnt/efs
-
-# Montar o EFS - Substitua o EFS_ID pelo ID correto do seu sistema EFS
 sudo mount -t efs SEU-ID-EFS:/ /mnt/efs
 
-# Instalar o Docker
 sudo amazon-linux-extras install docker -y
 sudo service docker start
 sudo usermod -a -G docker ec2-user
 
-# Instalar o Docker Compose corretamente
 DOCKER_COMPOSE_VERSION="1.29.2"
 sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-
-# Verificar se o Docker Compose foi instalado corretamente
 docker-compose --version
 
-# Criar o diretório do WordPress
 sudo mkdir -p /home/ec2-user/wordpress
 sudo chown ec2-user:ec2-user /home/ec2-user/wordpress
 
-# Criar o arquivo docker-compose.yml
 cat <<EOF > /home/ec2-user/wordpress/docker-compose.yml
 version: '3.8'
  
@@ -177,9 +167,9 @@ volumes:
   db_data:
 EOF
 
-# Mudar para o diretório do WordPress e subir os containers
 cd /home/ec2-user/wordpress
 docker-compose up -d
+```
 ---
 
 ## 5. Configuração do Load Balancer

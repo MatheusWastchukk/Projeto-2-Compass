@@ -246,15 +246,8 @@ Copie o DNS do Load Balancer e acesse via navegador. A página de instalação d
 
 ### 7.2. Testar o Auto Scaling
 
-1. Conecte-se a uma instância EC2 via SSH.
-2. Execute: `sudo stress --cpu 8 --timeout 600`
-3. Observe se novas instâncias são adicionadas.
-
-### 7.3. Verificar a Persistência de Dados
-
-1. Complete a instalação do WordPress.
-2. Crie posts e faça upload de imagens.
-3. Termine todas as instâncias EC2 e aguarde novas serem criadas.
-4. Verifique se o conteúdo do WordPress permanece intacto.
+1. Finalize uma  das instâncias ec2 criada pelo auto scaling.
+2. Observe se uma nova será criada na zona de disponibilidade em que a finalizada estava.
+3. Acesse o DNS do Load Balancer para garantir que a conexão se manteve estável.
 
 ---

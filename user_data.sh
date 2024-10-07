@@ -3,7 +3,7 @@ sudo yum update -y
 sudo yum install -y nfs-utils amazon-efs-utils
 
 sudo mkdir -p /mnt/efs
-sudo mount -t efs fs-0bee2a3ca8b069311.efs.us-east-1.amazonaws.com:/ /mnt/efs
+sudo mount -t efs SEU-ID-EFS:/ /mnt/efs
 
 sudo amazon-linux-extras install docker -y
 sudo service docker start
@@ -29,10 +29,10 @@ services:
     ports:
       - "80:80"  
     environment:
-      WORDPRESS_DB_HOST: "projeto-2-compass-rds.cngyqmcsamml.us-east-1.rds.amazonaws.com"
-      WORDPRESS_DB_USER: "wordpress"
-      WORDPRESS_DB_PASSWORD: "wordpress"
-      WORDPRESS_DB_NAME: "wordpress" 
+      WORDPRESS_DB_HOST: "NOME-DO-SEU-HOST"
+      WORDPRESS_DB_USER: "NOME-DO-SEU-USER"
+      WORDPRESS_DB_PASSWORD: "SUA-SENHA-DO-BANCO-DE-DADOS"
+      WORDPRESS_DB_NAME: "NOME-DO-SEU-BANCO-DE-DADOS" 
       TZ: "America/Sao_Paulo"  
     volumes:
       - /mnt/efs:/var/www/html  

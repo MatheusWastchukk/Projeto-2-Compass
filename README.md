@@ -211,18 +211,19 @@ Registre as instâncias EC2 no Target Group.
 
 No console EC2, crie um novo **Launch Template**:
 
-- **Nome**: `projeto-2-compass-lt`
+- **Nome**: `projeto-2-compass-template`
 - **AMI**: Mesma das instâncias EC2
 - **Tipo de instância**: `t2.micro`
 - **Security Group**: `ec2-sg`
+- **Sub-redes**: 'Não incluir no modelo de execução'
 - **User data**: Use o mesmo script da seção 4.2
 
 ### 6.2. Criar Auto Scaling Group
 
 Crie um novo **Auto Scaling Group**:
 
-- **Nome**: `projeto-2-compass-asg`
-- **Launch template**: `projeto-2-compass-lt`
+- **Nome**: `projeto-2-compass-AS`
+- **Launch template**: `projeto-2-compass-template`
 - **VPC e subnets**: `projeto-2-compass-vpc` e subnets privadas
 - **Load Balancing**: Ative e selecione o Target Group criado
 - **Health check type**: ELB

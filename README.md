@@ -234,7 +234,6 @@ Crie um novo **Auto Scaling Group**:
 Adicione uma política de scaling dinâmico baseada em **CPU**:
 
 - Aumente quando o uso médio da CPU for maior que 70% por 5 minutos
-- Diminua quando o uso médio da CPU for menor que 30% por 5 minutos
 
 ---
 
